@@ -7,7 +7,7 @@ int WINAPI WinMain( HINSTANCE hInstance,
 {
 
 	MessageBox(NULL,
-		"Hello World!Hello",
+		pszCmdLine,
 		"Frist Win32",
 		MB_OK);
 	return 0;

@@ -9,6 +9,11 @@ LRESULT CALLBACK WndProc(HWND hWnd,
 	WPARAM wParam,
 	LPARAM lParam)
 {
+	switch (nMsg) {
+		case WM_DESTROY:
+			PostQuitMessage(0);
+			return 0;
+	}
 	return DefWindowProc(hWnd, nMsg,
 		wParam, lParam);
 }
@@ -65,6 +70,22 @@ HWND MyCreate(LPSTR pszClassName) {
 }
 
 
+//5 显示窗口
+
+void DisplayWnd(HWND hWnd)
+{
+	ShowWindow(hWnd, SW_SHOW);
+	UpdateWindow(hWnd);
+}
+
+//6.消息处理
+void Message() {
+	MSG msg = {0};
+	while(GetMessage(&msg, NULL, 0, 0)) {
+		DispatchMessage(&msg);
+	}
+}
+
 //1.入口函数
 int WINAPI WinMain(HINSTANCE hInstance,
 				HINSTANCE hPrevInstance,
@@ -74,8 +95,9 @@ int WINAPI WinMain(HINSTANCE hInstance,
 	HWND hWnd = NULL;
 	g_hInst = hInstance;
 	MyRegister("MyWnd");
-
 	hWnd = MyCreate("MyWnd");
+	DisplayWnd(hWnd);
 
+	Message();
 	return 0;
 }

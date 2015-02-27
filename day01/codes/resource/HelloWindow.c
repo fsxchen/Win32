@@ -31,7 +31,7 @@ BOOL MyRegister(LPSTR pszClassName) {
 	wc.cbClsExtra 		= 0;
 	wc.cbWndExtra 		= 0;
 	wc.hInstance 		= g_hInst;
-	wc.hIcon			= NULL;
+	wc.hIcon			= LoadIcon(g_hInst, MAKEINTRESOURCE(100));
 	wc.hCursor			= NULL;
 	wc.hbrBackground	= (HBRUSH) (COLOR_BTNFACE);
 	wc.lpszMenuName		= NULL;

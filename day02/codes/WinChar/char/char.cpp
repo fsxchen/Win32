@@ -3,59 +3,109 @@
 
 #include "stdafx.h"
 #include "stdlib.h"
-#include <string.h>
+#include "string.h"
+
+#define _UNICODE
+
+#include "tchar.h"
 #include <windows.h>
+// #ifndef _UNICODE
+// 	typedef char TCHAR
+// 	#define __T(x)	x
+// #else
+// 	typedef wchar_t TCHAR
+// 	#define __T(x)  L##x
+// #endif
+// UNICODE
+//  wchar_t * pszText = L"我是程序员";
+// MUTIBYTE
+//  char * pszText = "我是程序员";
 
 
+void PrintUnicode() {
+	HANDLE hOut = 
+		GetStdHandle(STD_OUTPUT_HANDLE);
+	wchar_t * pszText = L"我不是程序员！";
+	//WriteConsole(hOut);	//其实是WriteConsoleA/WriteConsoleW
+	WriteConsoleW(hOut, pszText, wcslen(pszText), NULL, NULL);
 
-void ASCII() {
-	char cText = 0;
-	for(int nIndex = 0; nIndex < 256; nIndex ++) {
-		printf("%c ", cText);
-		cText++;
-	}	
+	wchar_t szText[2] = {0};
+	for (BYTE nHigh = 0x48; nHigh < 0x9F; nHigh++) {
+		for (BYTE nLow= 0; nLow < 0xFF; nLow++) {
+			szText[0] = MAKEWORD(nLow, nHigh);
+			WriteConsoleW(hOut, szText, wcslen(szText), NULL, NULL);
+		}
+	}
+	
 }
 
-void CodePage(int nCodePage) {
-	SetConsoleOutputCP(nCodePage);
-	ASCII();
-}
-
-
-void c_char() {
-	char * pszText = "Hello World!\n";
+void tchar( )
+{
+	TCHAR * pszText = __T("我是程序员") ;
+#ifndef _UNICODE
 	int nLen = strlen(pszText);
-	printf("%d, %s", nLen, pszText);
+#else
+	int nLen = wcslen(pszText);
+#endif
+	printf("%d\n", nLen);
 }
 
-void C_wchat() {
+
+void C_wchar( )
+{
 	wchar_t cText = 'A';
 	wchar_t * pszText = L"ABCD";
-	wchar_t * pszChs = L"我是程序员";
-	int nLen = wcslen(pszText);
-	//printf("%d %s\n", nLen, pszText);
-	//wprintf(L"%s\n", pszText);
-	nLen = wcslen(pszChs);
-	wprintf(L"什么情况：%d %s\n", nLen, pszChs);
+	int nLen = wcslen( pszText );
+	printf( "%d %s\n", nLen, pszText );
+	wprintf( L"%s\n", pszText );
 
-	printf("++++++++++++++++++++++++++\n");
-	char * pChs = "我是程序员";
-	nLen = strlen(pChs);
-	printf("M %d %s\n", nLen, pChs);
+	wchar_t * pwszChs = L"我是程序员";
+	nLen = wcslen( pwszChs );
+	wprintf( L"W: %d %s\n", nLen, pwszChs );
+	
+	char * pszChs = "我是程序员";
+	nLen = strlen( pszChs );
+	printf( "M %d %s\n", nLen, pszChs );
+}
 
+void CoadPage( int nCodePage )
+{
+	SetConsoleOutputCP( nCodePage );
+	char cText = 0;
+	for( int nIndex=0; nIndex<256; nIndex++ )
+	{
+		printf( "%c ", cText );
+		cText++;
+	}
+}
+
+void ASCII( )
+{
+	char cText = 0;
+	for( int nIndex=0; nIndex<256; nIndex++ )
+	{
+		printf( "%c ", cText );
+		cText++;
+	}
+}
+
+void c_char( )
+{
+	char * pszText = "Hello World!\n";
+	int nLen = strlen( pszText );
+	printf( "%d, %s", nLen, pszText );
 }
 
 int main(int argc, char* argv[])
 {
-//	c_char();
-//	printf("Hello World!\n");
-	
-//	ASCII();
-//	printf("=====================================================\n");
-//	CodePage(437);
-//	printf("=====================================================\n");
-//	CodePage(936);
-	C_wchat();
+	//c_char( );
+	//ASCII( );
+	//printf( "\n-------------------\n" );
+	//CoadPage( 437 );
+	//CoadPage( 936 );
+	//C_wchar();
+	PrintUnicode();
 	return 0;
 }
+
 

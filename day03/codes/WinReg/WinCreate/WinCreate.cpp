@@ -114,12 +114,29 @@ int APIENTRY WinMain(HINSTANCE hInstance,
 	HWND hWnd = CreateWnd("MyWnd", WS_OVERLAPPEDWINDOW, NULL);
 	
 	//创建子窗口
-	HWND hChild = CreateWnd("Child", 
+	HWND hChild1 = CreateWnd("Child", 
 			WS_CHILD | WS_VISIBLE
-			| WS_BORDER | WS_THICKFRAME,
+			| WS_BORDER | WS_THICKFRAME
+			| WS_CAPTION |WS_SYSMENU
+			| WS_MINIMIZEBOX | WS_MAXIMIZEBOX,
+
 			hWnd);
 
-	MoveWindow(hChild, 100, 100, 200, 200, TRUE);
+	HWND hChild2 = CreateWnd("Child", 
+			WS_CHILD | WS_VISIBLE
+			| WS_BORDER | WS_THICKFRAME | WS_POPUP
+			| WS_CAPTION |WS_SYSMENU,
+			hWnd);
+
+	HWND hChild3 = CreateWnd("Child", 
+			WS_CHILD | WS_VISIBLE
+			| WS_BORDER | WS_THICKFRAME
+			| WS_CAPTION |WS_SYSMENU,
+			hWnd);
+
+	MoveWindow(hChild1, 100, 100, 200, 200, TRUE);
+	MoveWindow(hChild2, 100, 200, 200, 200, TRUE);
+	MoveWindow(hChild3, 100, 300, 200, 200, TRUE);
 
 	//显示父窗口
 	DisplayWnd(hWnd);

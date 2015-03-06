@@ -2,7 +2,48 @@
 //
 
 #include "stdafx.h"
-HINSTANCE g_hInst = NULL;
+#include <stdio.h>
+HINSTANCE g_hInst	= NULL;
+HWND g_hButton		= NULL;
+
+void OnCreade(HWND hWnd, UINT nMsg, WPARAM wParam, LPARAM lParam)
+{
+	LPCREATESTRUCT pCreateStruct = LPCREATESTRUCT(lParam);
+	MessageBox(NULL, pCreateStruct->lpszName,
+		"OnCreate", MB_OK);
+
+	g_hButton = CreateWindowEx(0, "BUTTON", "BUTTON", WS_CHILD | WS_VISIBLE,
+			0, 0, 100, 100,
+			hWnd, NULL, g_hInst, NULL);
+}
+
+void OnSize(HWND hWnd, UINT nMsg, WPARAM wParam, LPARAM lParam)
+{
+	int nWidth = LOWORD(lParam);
+	int nHeight = HIWORD(lParam);
+	CHAR szText[260] = {0};
+	sprintf(szText, "WIDTH:%d, HEIGHT:%d", nWidth, nHeight);
+	//MessageBox(NULL, szText, "OnSize", MB_OK);
+	int nX = (nWidth - 100)/2;
+	int nY = (nHeight - 100 ) /2;
+
+	MoveWindow(g_hButton, nX, nY, 100 , 100, TRUE);
+
+}
+
+BOOL OnSysCommand(HWND hWnd, UINT nMsg, WPARAM wParam, LPARAM lParam)
+{
+	switch(wParam) {
+	case SC_CLOSE:
+		if(IDOK == MessageBox(
+			NULL, "是否将文件存盘？", "提示", 
+			MB_OK | MB_OKCANCEL | MB_ICONWARNING)) {
+			return TRUE;
+		}
+		return FALSE;
+	}
+	return FALSE;
+}
 
 LRESULT CALLBACK WndProc(HWND hWnd,
 						 UINT nMsg,
@@ -10,6 +51,16 @@ LRESULT CALLBACK WndProc(HWND hWnd,
 						 LPARAM lParam)
 {
 	switch(nMsg) {
+	case WM_CREATE:
+		OnCreade(hWnd, nMsg, wParam, lParam);
+		break;
+	case WM_SIZE:
+		OnSize(hWnd, nMsg, wParam, lParam);
+		break;
+	case WM_SYSCOMMAND:
+		if (!OnSysCommand(hWnd, nMsg, wParam, lParam))
+			return 0;
+		break;
 	case WM_DESTROY:   //窗口销毁的时候的消息
 		PostQuitMessage(0);		//发送WM_QUIT的消息
 		return 0;

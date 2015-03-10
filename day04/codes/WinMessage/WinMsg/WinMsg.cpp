@@ -6,15 +6,21 @@
 HINSTANCE g_hInst	= NULL;
 HWND g_hButton		= NULL;
 
+
+#define WM_FRISTMSG WM_USER+1
+#define WM_SECONDMSG WM_USER+2
+
 void OnCreade(HWND hWnd, UINT nMsg, WPARAM wParam, LPARAM lParam)
 {
 	LPCREATESTRUCT pCreateStruct = LPCREATESTRUCT(lParam);
-	MessageBox(NULL, pCreateStruct->lpszName,
-		"OnCreate", MB_OK);
+	//MessageBox(NULL, pCreateStruct->lpszName,
+	//	"OnCreate", MB_OK);
 
 	g_hButton = CreateWindowEx(0, "BUTTON", "BUTTON", WS_CHILD | WS_VISIBLE,
 			0, 0, 100, 100,
 			hWnd, NULL, g_hInst, NULL);
+
+	SendMessage(hWnd, WM_FRISTMSG, 0, 0);
 }
 
 void OnSize(HWND hWnd, UINT nMsg, WPARAM wParam, LPARAM lParam)
@@ -62,8 +68,11 @@ LRESULT CALLBACK WndProc(HWND hWnd,
 			return 0;
 		break;
 	case WM_DESTROY:   //窗口销毁的时候的消息
-		PostQuitMessage(0);		//发送WM_QUIT的消息
+		//PostQuitMessage(0);		//发送WM_QUIT的消息
+		PostMessage(hWnd, WM_QUIT, 0, 0);
 		return 0;
+	case WM_FRISTMSG:
+		MessageBox(NULL, "FIRSTMSG", "FFFFFFF", MB_OK);
 	}
 	//使用系统函数来处理我们未处理的消息类型
 	return DefWindowProc(hWnd, nMsg, wParam, lParam);
@@ -105,6 +114,7 @@ HWND CreateWnd(LPSTR pszClassName) {
 						NULL,
 						g_hInst,
 						NULL);
+	
 	return hWnd;
 }
 
@@ -116,6 +126,7 @@ void DisplayWnd(HWND hWnd) {
 
 void Message() {
 	MSG msg = {0};
+	//while(PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
 	while(GetMessage(&msg, NULL, 0, 0))
 	{
 		TranslateMessage(&msg);

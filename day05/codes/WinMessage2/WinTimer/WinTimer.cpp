@@ -9,6 +9,15 @@ HANDLE g_hStdOut=NULL;
 UINT g_nTimerID1 = 0;
 
 
+void CALLBACK TimerProc1(HWND hWnd,
+						 UINT nMsg,
+						 UINT idEvent,
+						 DWORD dwTime)
+{
+	CHAR szText[] = "TimeProc1: Hello Timer\n";
+	WriteConsole(g_hStdOut, szText, strlen(szText), NULL, NULL);
+}
+
 void PrintLog(LPSTR pszLog)
 {
 	WriteConsole(g_hStdOut, pszLog, strlen(pszLog), NULL, NULL);
@@ -20,6 +29,9 @@ void OnCreate(HWND hWnd, UINT nMsg, WPARAM wParam, LPARAM lParam)
 	SetTimer(hWnd, 1001, 2 * 1000, NULL);
 	//使用窗口处理函数
 	g_nTimerID1 = SetTimer(hWnd, 0, 5 * 1000, NULL);
+	//创建定时器，使用TimerProc1处理函数
+	SetTimer(hWnd, 1002, 7 * 1000, TimerProc1);
+
 }
 
 void OnTimer(HWND hWnd, UINT nMsg, WPARAM wParam, LPARAM lParam)
@@ -34,19 +46,21 @@ void OnTimer(HWND hWnd, UINT nMsg, WPARAM wParam, LPARAM lParam)
 		}
 		break;
 	case 1001:
-		CHAR sz1Text[] = "1001: Hello Timer\n";
-		WriteConsole(g_hStdOut, sz1Text, strlen(sz1Text), NULL, NULL);
+		{
+			CHAR sz1Text[] = "1001: Hello Timer\n";
+			WriteConsole(g_hStdOut, sz1Text, strlen(sz1Text), NULL, NULL);
+		}
 		break;
-	if (wParam == g_nTimerID1)
-	{
+	default:
+		{
+		CHAR sz2Text[] = "XXXX: Hello Timerddd\n";
+		WriteConsole(g_hStdOut, sz2Text, strlen(sz2Text), NULL, NULL);
+		}
 
-		CHAR sz1Text[] = "XXXX: Hello Timer\n";
-		WriteConsole(g_hStdOut, sz1Text, strlen(sz1Text), NULL, NULL);
-		break;
 	}
-	}
-
 	
+	
+
 }
 
 LRESULT CALLBACK WndProc(HWND hWnd,

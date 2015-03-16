@@ -10,6 +10,12 @@ void OnCommand(HWND hWnd, UINT nMsg, WPARAM wParam, LPARAM lParam)
 	CHAR szText[260] = {0};
 	sprintf(szText, "id: %d\n", nID);
 	WriteConsole(g_hStdOut, szText, strlen(szText), NULL, NULL);
+	switch(nID)
+	{
+	case 1002:
+		PostQuitMessage(0);
+		break;
+	}
 }
 
 void OnCreate(HWND hWnd, UINT nMsg, WPARAM wParam, LPARAM lParam)

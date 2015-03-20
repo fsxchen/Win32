@@ -3,6 +3,27 @@
 
 HINSTANCE g_hInst=NULL;
 HANDLE g_hStdOut=NULL;
+BOOL g_bCheckCut = FALSE;
+
+
+void OnInitMenuPopup(HWND hWnd, UINT nMsg, WPARAM wParam, LPARAM lParam)
+{
+	CHAR szText[260] = {0};
+	sprintf(szText, "OnInitMenuPopup: HANDLE=%p\n", (HMENU)wParam);
+	WriteConsole(g_hStdOut, szText, strlen(szText), NULL, NULL);
+	HMENU hMenu = (HMENU)wParam;
+	if(TRUE == g_bCheckCut)
+	{
+		CheckMenuItem(hMenu, 1003,
+			MF_CHECKED | MF_BYCOMMAND);
+	}
+	else
+	{
+		CheckMenuItem(hMenu, 1003,
+			MF_BYCOMMAND);
+
+	}
+}
 
 void OnCommand(HWND hWnd, UINT nMsg, WPARAM wParam, LPARAM lParam) 
 {
@@ -15,7 +36,11 @@ void OnCommand(HWND hWnd, UINT nMsg, WPARAM wParam, LPARAM lParam)
 	case 1002:
 		PostQuitMessage(0);
 		break;
+	case 1003:
+		g_bCheckCut = !g_bCheckCut;
+		break;
 	}
+	
 }
 
 void OnCreate(HWND hWnd, UINT nMsg, WPARAM wParam, LPARAM lParam)
@@ -60,6 +85,9 @@ LRESULT CALLBACK WndProc(HWND hWnd,
 	case WM_CREATE:
 		OnCreate(hWnd, nMsg, wParam, lParam);
 		break;
+	case WM_INITMENUPOPUP:
+		OnInitMenuPopup(hWnd, nMsg, wParam, lParam);
+
 	case WM_DESTROY:
 		KillTimer(hWnd, 1000);
 		PostQuitMessage(0);
